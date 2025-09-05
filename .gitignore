@@ -15,5 +15,5 @@ node_modules
 # .DS_Store is only for Mac users
 **/.DS_Store
 
-# logs
+# This is supposed to delete itself the next push
 README.md

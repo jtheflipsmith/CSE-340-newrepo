@@ -3,7 +3,7 @@
 *:before,
 *:after {
   box-sizing: border-box;
-  
+
 }
 
 /************ Header ************/
@@ -22,25 +22,51 @@ header {
 }
 
 /************ Body ************/
+
 body {
   font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
+  margin: 20px;
   padding: 0;
   background-color: white;
-  margin: 10px;
+  margin: 0 auto;
+  border: lightblue 5px solid;
+  max-width: 750px;
+  background-image: url('../images/site/small_check.jpg');
+}
+
+#wrapper {
+  background: white;
+}
+
+
+
+.hero {
+  margin-bottom: 5rem;
 }
 
 #hero-img{
   display: block;
   margin-left: auto;
   margin-right: auto;
-
+  position: relative;
 }
 
 article {
   border: 1px solid black;
   width: 200px;
-  float: left;
+  position: absolute;
+  padding: 10px;
+  background: rgb(252, 252, 252, 0.5);
+  transform: translate(30%, -85%);
+}
+
+article button {
+  background: turquoise;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
 }
 
 h1, h2, h3 {
@@ -57,6 +83,38 @@ a:hover {
   color: #666;
 }
 
+
+
+.items{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 10px;
+  gap: 10px;
+
+}
+
+.items div img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background: turquoise;
+  padding: 1rem;
+  max-height: 100px;
+  align-items: center;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.items div {
+  text-align: center;
+}
+
+
+
+.reviews li {
+  margin-bottom: 10px;
+}
+
 /* Navigation */
 
 nav {
@@ -70,6 +128,30 @@ nav ul {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
+}
 
+nav ul li {
+  padding: .75rem;
+  transition: all 0.2s ease;
+}
+
+nav ul li:hover {
+  background-color: #555;
+  padding: .75rem;
+}
+
+/************ Footer ************/
+
+footer {
+  padding: 10px;
+  margin-top: 20px;
+}
+
+@media only screen and (min-width: 38rem) {
+.extras {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 10px;
+  }
 }

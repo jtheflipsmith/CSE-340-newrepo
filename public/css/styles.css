@@ -1,9 +1,21 @@
+:root {
+  --russian-violet: hsla(244, 61%, 16%, 1);
+  --argentinian-blue: rgba(93, 175, 234, 1);
+  --argentinian-blue-faded: rgba(93, 175, 234, .5);
+  --uranian-blue: hsla(206, 78%, 84%, 1);
+  --uranian-blue-faded: hsla(206, 78%, 84%, .5);
+  --flame: rgba(229, 97, 56, 1);
+}
+
+
+
+
 /******* Change Box Model ***************/
 *,
 *:before,
 *:after {
   box-sizing: border-box;
-
+  font-family: "Exo", serif;
 }
 
 /************ Header ************/
@@ -30,7 +42,7 @@ body {
   background-color: white;
   margin: 0 auto;
   border: lightblue 5px solid;
-  max-width: 750px;
+  max-width: 800px;
   background-image: url('../images/site/small_check.jpg');
 }
 
@@ -52,21 +64,25 @@ body {
 }
 
 article {
-  border: 1px solid black;
-  width: 200px;
+  width: 250px;
   position: absolute;
   padding: 10px;
-  background: rgb(252, 252, 252, 0.5);
-  transform: translate(30%, -85%);
+  background: var(--argentinian-blue-faded);
+  color: var(--flame);
+  transform: translate(15%, -95%);
+  font-weight: 600;
+  font-size: 18px;
 }
 
+
 article button {
-  background: turquoise;
+  background: var(--flame);
   border: none;
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
   width: 100%;
+  margin-top: 3rem;
 }
 
 h1, h2, h3 {
@@ -109,7 +125,13 @@ a:hover {
   text-align: center;
 }
 
+.upgrades h2 {
+  background: var(--argentinian-blue);
+}
 
+.reviews h2 {
+  background: var(--uranian-blue);
+}
 
 .reviews li {
   margin-bottom: 10px;
@@ -118,7 +140,7 @@ a:hover {
 /* Navigation */
 
 nav {
-  background-color: #333;
+  background-color: var(--russian-violet);
   color: white;
   padding: 10px 0;
 } 
@@ -137,7 +159,7 @@ nav ul li {
 }
 
 nav ul li:hover {
-  background-color: #555;
+  background-color: var(--argentinian-blue-faded);
   padding: .75rem;
 }
 

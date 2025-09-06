@@ -1,5 +1,6 @@
 :root {
   --russian-violet: hsla(244, 61%, 16%, 1);
+  --russian-violet-faded: hsla(244, 61%, 16%, .7);
   --argentinian-blue: rgba(93, 175, 234, 1);
   --argentinian-blue-faded: rgba(93, 175, 234, .5);
   --uranian-blue: hsla(206, 78%, 84%, 1);
@@ -64,25 +65,30 @@ body {
 }
 
 article {
-  width: 250px;
+  width: 240px;
   position: absolute;
   padding: 10px;
-  background: var(--argentinian-blue-faded);
-  color: var(--flame);
-  transform: translate(15%, -95%);
+  background: var(--russian-violet-faded);
+  color: rgb(231, 231, 231);
+  transform: translate(10%, -90%);
   font-weight: 600;
   font-size: 18px;
+  ;
 }
 
 
+article h2 {
+  margin-bottom: -1rem;
+}
+
 article button {
-  background: var(--flame);
+  background: var(--uranian-blue);
   border: none;
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
   width: 100%;
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 
 h1, h2, h3 {
@@ -99,8 +105,6 @@ a:hover {
   color: #666;
 }
 
-
-
 .items{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -113,7 +117,7 @@ a:hover {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  background: turquoise;
+  background: var(--russian-violet-faded);
   padding: 1rem;
   max-height: 100px;
   align-items: center;

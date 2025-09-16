@@ -145,9 +145,10 @@ a:hover {
 
 nav {
   background-color: var(--russian-violet);
-  color: white;
   padding: 10px 0;
 } 
+
+
 
 nav ul {
   list-style: none;
@@ -165,6 +166,11 @@ nav ul li {
 nav ul li:hover {
   background-color: var(--argentinian-blue-faded);
   padding: .75rem;
+}
+
+nav ul li a {
+  color: whitesmoke;
+  font-weight: bold;
 }
 
 /************ Footer ************/

@@ -33,7 +33,7 @@ app.use("/inv", inventoryRoute)
  * Values from .env (environment) file
  *************************/
 const port = process.env.PORT 
-const host = process.env.HOST || "localhost"
+const host = process.env.HOST
 
 /* ***********************
  * Log statement to confirm server operation

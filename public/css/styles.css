@@ -52,6 +52,37 @@ body {
 }
 
 
+/* Navigation */
+
+nav {
+  background-color: var(--russian-violet);
+  padding: 10px 0;
+} 
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+nav ul li {
+  padding: .75rem;
+  transition: all 0.2s ease;
+}
+
+nav ul li:hover {
+  background-color: var(--argentinian-blue-faded);
+  padding: .75rem;
+}
+
+nav ul li a {
+  color: whitesmoke;
+  font-weight: bold;
+}
+
+/* Main Content */
 
 .hero {
   margin-bottom: 5rem;
@@ -141,37 +172,48 @@ a:hover {
   margin-bottom: 10px;
 }
 
-/* Navigation */
+/* Vehicle Classification Page */
 
-nav {
-  background-color: var(--russian-violet);
-  padding: 10px 0;
-} 
-
-
-
-nav ul {
+#inv-display li{
+  padding: 20px;
+  margin: 10px;
+  border: solid rgb(187, 187, 187) 2px;
+  border-radius: 3px;
+  box-shadow: 0px 0px 7px rgba(155, 155, 155, 0.3);
+  text-align: center;
   list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: space-around;
 }
 
-nav ul li {
-  padding: .75rem;
-  transition: all 0.2s ease;
+#inv-display li:hover {
+  background: var(--uranian-blue-faded);
+  transform: scale(1.02);
+  transition: all 0.2s ease-in-out;
 }
 
-nav ul li:hover {
-  background-color: var(--argentinian-blue-faded);
-  padding: .75rem;
+#inv-display img {
+  max-width: 200px;
+  margin-bottom: 10px;
 }
 
-nav ul li a {
-  color: whitesmoke;
-  font-weight: bold;
+/* Vehicle Detail Page */
+
+
+
+#detailInfo {
+  padding: 20px;
+  border: solid rgb(187, 187, 187) 2px;
+  max-width: 100%;
 }
+
+#detailDisplay img {
+  max-width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+
 
 /************ Footer ************/
 
@@ -180,10 +222,32 @@ footer {
   margin-top: 20px;
 }
 
+/* Desktop View */
+
 @media only screen and (min-width: 38rem) {
 .extras {
   display: grid;
   grid-template-columns: 1fr 1fr;
   padding: 10px;
   }
+
+  #inv-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  #detailDisplay {
+    display: grid;
+    grid-template-columns: 60% 1fr;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  #detailInfo {
+    max-width: 300px;
+  }
 }
+
+

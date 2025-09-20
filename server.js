@@ -29,10 +29,12 @@ app.use(static)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes 
 app.use("/inv", inventoryRoute)
+
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Ah...you look lost, simply head back home and reflect on your mistakes'})
 })
+
 
 /* ***********************
 *Express Error Handler
@@ -41,13 +43,28 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){message = err.message} else {message = "oh no! There was a crash. Maybe try a different route?"}
+  let message
+  let title
+  if(err.status == 404){
+      title = "404 Not Found"
+      message = err.message || "Well, look at this mess, nothing to do but go back i guess...?"
+    }
+  else if (err.status == 500){
+    title = "500 Server Error"
+    message = err.message || "Caught us with out pants down"
+  }
+  else {
+    title = "Error"
+    message = "Well, this is embarrassing..."}
+  res.status(err.status || 500)
   res.render("errors/error", {
     title: err.status || 'Server Error',
     message,
     nav
   })
 })
+
+
 
 /* ***********************
  * Local Server Information

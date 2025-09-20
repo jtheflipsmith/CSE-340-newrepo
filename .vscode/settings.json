@@ -13,5 +13,7 @@
             "name": "render.com",
             "connectString": "postgresql://cse340js:fkm5rINEyzh3RTpmvTfhowlTYLCulAST@dpg-d2t76e95pdvs7399389g-a.oregon-postgres.render.com/cse340js_4dn9"
         }
-    ]
+    ],
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": []
 }

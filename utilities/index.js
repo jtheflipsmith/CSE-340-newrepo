@@ -80,8 +80,6 @@ Util.buildInventoryDetail = async function(data){
   return detail
 }
 
-
-
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 

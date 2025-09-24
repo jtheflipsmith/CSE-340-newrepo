@@ -222,6 +222,61 @@ footer {
   margin-top: 20px;
 }
 
+/* **************** form ********************/
+
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 0 auto;
+  background: var(--russian-violet-faded);
+  padding: 30px;
+  color: whitesmoke;
+  border-radius: 20px;
+  box-shadow: 0 0 10px lightgrey;
+}
+
+form label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+form input, form select {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+form button {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: var(--argentinian-blue);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+form button:hover {
+  box-shadow: inset 0 0 5px var(--russian-violet-faded)
+}
+
+form a {
+  color: var(--uranian-blue);
+  text-decoration: underline;
+}
+
+#passButton {
+  border: 2px solid #000;
+  border-radius: 5px;
+  padding: 2px;
+  margin-top: 1em;
+  font-size: small;
+  width: 7em;
+  text-align: center;
+  cursor: pointer;
+}
 /* Desktop View */
 
 @media only screen and (min-width: 38rem) {

@@ -13,23 +13,52 @@ const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities/")
+const session = require("express-session")
+const pool = require("./database/")
+const accountRoute = require("./routes/accountRoute")
+const bodyParser = require("body-parser")
+/* ***********************
+ * Middleware
+ *************************/
+
+app.use(session({
+  store: new (require('connect-pg-simple')(session))({ 
+    createTableIfMissing: true, // Create the session table if it doesn't exist
+    pool, // Connection pool
+  }),
+  secret: process.env.SESSION_SECRET, // long random string for security
+  resave: true, 
+  saveUninitialized: true, // create session for each visit
+  name: 'sessionId', // name of the cookie to store session ID
+}))
+
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+// Express Messages Middleware
+app.use(require('connect-flash')()) // flash messages for express
+app.use(function (req, res, next) { // custom middleware to setup flash message support
+  res.locals.messages = require('express-messages')(req, res) // make flash messages available in response locals
+  next() // move to next piece of middleware
+})
 
 /* ***********************
  * View Engine and Templates
  *************************/
-app.set("view engine", "ejs")
-app.use(expressLayouts)
+app.set("view engine", "ejs") // set view engine for server
+app.use(expressLayouts) // use express-ejs-layouts
 app.set("layout", "./layouts/layout") // not at view root
 
 /* ***********************
  * Routes
  *************************/
-app.use(static)
+app.use(static) // use static routes
 // Index route
-app.get("/", utilities.handleErrors(baseController.buildHome))
+app.get("/", utilities.handleErrors(baseController.buildHome)) // this is the route for the home page
 // Inventory routes 
 app.use("/inv", inventoryRoute)
-
+// Account routes
+app.use("/account", accountRoute)
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Ah...you look lost, simply head back home and reflect on your mistakes'})

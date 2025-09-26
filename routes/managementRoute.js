@@ -7,3 +7,5 @@ const manageController = require("../controllers/managementController") // impor
 
 // Add route to management view
 router.get("/management", utilities.handleErrors(manageController.buildManagement))
+
+module.exports = router;

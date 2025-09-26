@@ -1,7 +1,7 @@
 // Require utilities
 const utilities = require("../utilities/index.js")
 // Require account model
-const accountModel = require("../models/management-model.js")
+const managementModel = require("../models/management-model.js")
 
 /* *************************************
 * Deliver the management view

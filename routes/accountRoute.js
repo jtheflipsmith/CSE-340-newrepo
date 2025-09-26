@@ -21,8 +21,8 @@ router.post(
 // Process the login attempt
 router.post( 
     "/login",
-    (reg, res) => {
-        reg.status(200).send('login process');
+    (req, res) => {
+        req.status(200).send('login process');
     } 
 )
 

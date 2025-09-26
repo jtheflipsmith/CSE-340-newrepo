@@ -1,0 +1,14 @@
+<!-- creating the title -->
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } %>
+
+<%- messages() %>
+
+<form action="/classification/add-classification" method="post">
+    <p>Field is required</p>
+    <label for="addCLassification">Add new classification</label>
+    <p>Name must be ALPHABETIC characters only!</p>
+    <input type="text" name="addClassification" id="addClassification" required value="<%= locals.classification_name %>">
+    <button type="submit">Add Classification</button>
+</form>

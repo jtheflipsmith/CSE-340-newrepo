@@ -7,9 +7,9 @@
 
 <%# message %>
 
-<form>
+<form id="login-form" action="/account/login" method="POST">
     <label for="email">Email Address</label>
-    <input type="email" name="account_email" id="email" placeholder="johnDoe@gmail.com" required>
+    <input type="email" name="account_email" id="email" placeholder="johnDoe@gmail.com" required value="<%= locals.account_email %>">
 
     <label for="password">Password</label>
     <input type="password" name="account_password" id="password" placeholder="*********" required>

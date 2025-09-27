@@ -10,4 +10,4 @@ async function createNewClassification(){
     }
 }
 
-module.exports(createNewClassification)
+module.exports = (createNewClassification)

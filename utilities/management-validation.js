@@ -1,11 +1,11 @@
-const utilities = require(".")
-const { body, validationResult } = require("express-validator");
+const utilities = require(".") // Import utilities index file
+const { body, validationResult } = require("express-validator"); 
 const validate = {};
-const accountModel = require("../models/account-model")
 
-validate.registrationRules = () => {
+
+validate.addClassificationRules = () => {
     return [
-        // firstname is required and must be string
+        // classification name is required and must be string
         body("classification_name") // check the "account_firstname" field
             .trim() // trim leading/trailing white space
             .escape() // escape HTML characters
@@ -14,3 +14,120 @@ validate.registrationRules = () => {
             .withMessage("Please provide a classification name."), // on error, this message will be returned
     ]
 }
+
+
+
+validate.addInventoryRules = () => {
+    return [
+        // Check for make
+        body("inv_make")
+            .trim()
+            .escape()
+            .notEmpty()
+            .isLength({ min: 1 })
+            .withMessage("No valid make"),
+
+        // Sanitize model input 
+        body("inv_model")
+            .trim()
+            .escape()
+            .notEmpty()
+            .isLength({ min: 1 })
+            .withMessage("Isn't valid model"),
+
+        body("inv_description")
+            .trim()
+            .escape()
+            .notEmpty()
+            .isLength({ min: 1 })
+            .withMessage("Description isn't valid"),
+
+        body("inv_image")
+            .trim()
+            .escape()
+            .notEmpty()
+            .isLength({ min: 1 })
+            .withMessage("check image link"),
+
+        body("inv_thumbnail")
+            .trim()
+            .escape()
+            .notEmpty()
+            .isLength({ min: 1 })
+            .withMessage("Is the thumbnail clipped?"),
+
+        body("inv_price")
+            .trim()
+            .isNumeric()
+            .notEmpty()
+            .isLength({ min: 1 })
+            .withMessage("Check the price"), 
+            
+        body("inv_year")
+            .trim()
+            .isNumeric()
+            .notEmpty()
+            .isLength({ min: 1 })
+            .withMessage("Year not accepted"),   
+            
+        body("inv_miles")
+            .trim()
+            .isNumeric()
+            .notEmpty()
+            .isLength({ min: 1 })
+            .withMessage("Check the odometer"),  
+            
+        body("inv_color")
+            .trim()
+            .escape()
+            .notEmpty()
+            .isLength({ min: 1 })
+            .withMessage("Must be color blind")
+
+    ]
+}
+
+validate.checkClassificationData = async (req, res, next) => {
+    const {classification_name} = req.body
+    let errors = []
+    errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav()
+        res.render("inventory/management", {
+            errors,
+            title: "Add classification",
+            nav,
+            classification_name
+        })
+        return
+    }
+    next()
+}
+
+validate.checkInventoryData = async (req, res, next) => {
+    const { inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color } =
+    req.body
+    let errors = []
+    errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav()
+        res.render("inventory/management", {
+            errors,
+            title: "Add inventory",
+            nav, 
+            inv_make,
+            inv_model,
+            inv_year,
+            inv_description,
+            inv_image,
+            inv_thumbnail,
+            inv_price,
+            inv_miles,
+            inv_color
+        })
+        return
+    }
+    next()
+}
+
+module.exports = validate

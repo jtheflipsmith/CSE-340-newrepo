@@ -4,8 +4,16 @@ const router = new express.Router() // create an express router
 const utilities = require("../utilities/index") // import utilities module
 const manageValidate = require("../utilities/management-validation") // import management validation module
 const manageController = require("../controllers/managementController") // import controller into file
-
 // Add route to management view
 router.get("/management", utilities.handleErrors(manageController.buildManagement))
+
+router.post(
+    "/management",
+    manageValidate.addInventoryRules(),
+    manageValidate.addClassificationRules(),
+    manageValidate.checkClassificationData,
+    manageValidate.checkInventoryData,
+    utilities.handleErrors(manageController.registerClassification)
+)
 
 module.exports = router;

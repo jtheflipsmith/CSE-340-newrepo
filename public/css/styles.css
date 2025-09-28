@@ -277,6 +277,19 @@ form a {
   text-align: center;
   cursor: pointer;
 }
+
+.managementLinks a{
+  display: flex;
+  color: var(--russian-violet);
+  justify-content: center;
+  padding: 10px;
+}
+
+.managementLinks a:hover {
+  
+  background: var(--uranian-blue);
+}
+
 /* Desktop View */
 
 @media only screen and (min-width: 38rem) {

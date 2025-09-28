@@ -5,10 +5,10 @@
 
 <%- messages() %>
 
-<form action="/classification/add-classification" method="post">
+<form action="/inv/add-classification" method="POST">
     <p>Field is required</p>
-    <label for="addCLassification">Add new classification</label>
+    <label for="classification_name">Add new classification</label>
     <p>Name must be ALPHABETIC characters only!</p>
-    <input type="text" name="addClassification" id="addClassification" required value="<%= locals.classification_name %>">
+    <input type="text" name="classification_name" id="classification_name" required>
     <button type="submit">Add Classification</button>
 </form>

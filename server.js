@@ -16,7 +16,6 @@ const utilities = require("./utilities/")
 const session = require("express-session")
 const pool = require("./database/")
 const accountRoute = require("./routes/accountRoute")
-const manageRoute = require("./routes/managementRoute")
 const bodyParser = require("body-parser")
 /* ***********************
  * Middleware
@@ -60,8 +59,6 @@ app.get("/", utilities.handleErrors(baseController.buildHome)) // this is the ro
 app.use("/inv", inventoryRoute)
 // Account routes
 app.use("/account", accountRoute)
-// Management routes
-app.use("/management", manageRoute)
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Ah...you look lost, simply head back home and reflect on your mistakes'})

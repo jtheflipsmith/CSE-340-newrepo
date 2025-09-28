@@ -32,56 +32,48 @@ validate.addInventoryRules = () => {
             .trim()
             .escape()
             .notEmpty()
-            .isLength({ min: 1 })
             .withMessage("Isn't valid model"),
 
         body("inv_description")
             .trim()
             .escape()
             .notEmpty()
-            .isLength({ min: 1 })
             .withMessage("Description isn't valid"),
 
         body("inv_image")
             .trim()
             .escape()
             .notEmpty()
-            .isLength({ min: 1 })
             .withMessage("check image link"),
 
         body("inv_thumbnail")
             .trim()
             .escape()
             .notEmpty()
-            .isLength({ min: 1 })
             .withMessage("Is the thumbnail clipped?"),
 
         body("inv_price")
             .trim()
             .isNumeric()
             .notEmpty()
-            .isLength({ min: 1 })
             .withMessage("Check the price"), 
             
         body("inv_year")
             .trim()
             .isNumeric()
             .notEmpty()
-            .isLength({ min: 1 })
             .withMessage("Year not accepted"),   
             
         body("inv_miles")
             .trim()
             .isNumeric()
             .notEmpty()
-            .isLength({ min: 1 })
             .withMessage("Check the odometer"),  
             
         body("inv_color")
             .trim()
             .escape()
             .notEmpty()
-            .isLength({ min: 1 })
             .withMessage("Must be color blind")
 
     ]
@@ -111,7 +103,7 @@ validate.checkInventoryData = async (req, res, next) => {
     errors = validationResult(req)
     if (!errors.isEmpty()) {
         let nav = await utilities.getNav()
-        res.render("inventory/management", {
+        res.render("inventory/add-inventory", {
             errors,
             title: "Add inventory",
             nav, 

@@ -5,7 +5,7 @@
         res.redirect('/')  
     } %>
 
-<%# message %>
+<%- messages() %>
 
 <form id="login-form" action="/account/login" method="POST">
     <label for="email">Email Address</label>

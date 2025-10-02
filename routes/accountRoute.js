@@ -3,8 +3,10 @@ const express = require("express") // import express
 const router = new express.Router() // create an express router
 const utilities = require("../utilities/index") // import utilities module
 const regValidate = require("../utilities/account-validation") // import account validation module
-const accController = require("../controllers/accountController")
- // import account controller
+const accController = require("../controllers/accountController")// import account controller
+
+router.get("/", utilities.checkLogin, utilities.handleErrors(accController.buildManagement))
+
 // Route to login view
 router.get("/login", utilities.handleErrors(accController.buildLogin));
 
@@ -21,9 +23,9 @@ router.post(
 // Process the login attempt
 router.post( 
     "/login",
-    (req, res) => {
-        req.status(200).send('login process');
-    } 
+    regValidate.loginRules(),
+    regValidate.checkLoginData,
+    utilities.handleErrors(accController.accountLogin)
 )
 
 module.exports = router;

@@ -1,3 +1,5 @@
+
+
 <!--title data value-->
 <% if (title) { %>
     <h1><%= title %></h1>
@@ -8,6 +10,7 @@
 <%- messages() %>
 
 <form action="/account/register" method="post">
+
     <label for="accountFirstName">First name</label>
     <input type="text" name="account_firstname" id="accountFirstName" placeholder="John" required value="<%= locals.account_firstname %>">
 
@@ -28,7 +31,7 @@
         placeholder="*********" 
         required>
         <span>Passwords must be at least 12 characters and contain at least 1 number, 1 capital letter and 1 special character</span> 
-    <span id="passButton">Show password</span>
+    <button type="button" id="passButton">Show Password</button>
     <button type="submit">Register</button>
 </form>
 

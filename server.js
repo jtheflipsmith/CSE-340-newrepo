@@ -17,6 +17,8 @@ const session = require("express-session")
 const pool = require("./database/")
 const accountRoute = require("./routes/accountRoute")
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
+
 /* ***********************
  * Middleware
  *************************/
@@ -41,6 +43,10 @@ app.use(function (req, res, next) { // custom middleware to setup flash message 
   res.locals.messages = require('express-messages')(req, res) // make flash messages available in response locals
   next() // move to next piece of middleware
 })
+// cookie Parser statement
+app.use(cookieParser())
+// JWT authentication
+app.use(utilities.checkJWTToken)
 
 /* ***********************
  * View Engine and Templates
@@ -59,6 +65,7 @@ app.get("/", utilities.handleErrors(baseController.buildHome)) // this is the ro
 app.use("/inv", inventoryRoute)
 // Account routes
 app.use("/account", accountRoute)
+
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Ah...you look lost, simply head back home and reflect on your mistakes'})

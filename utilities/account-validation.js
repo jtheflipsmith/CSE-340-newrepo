@@ -5,6 +5,25 @@ const accountModel = require("../models/account-model")
 
 
 /* *************************************
+* Login Data Validation Rules
+* *************************************/
+validate.loginRules = () => {
+    return [
+        body("account_email")
+            .trim()
+            .escape()
+            .notEmpty()
+            .isLength({min: 1})
+            .withMessage("Please provide a correct email"),
+        
+        body("account_password")
+            .trim()
+            .notEmpty()
+
+    ]
+}
+
+/* *************************************
 * Registration Data Validation Rules
 * ************************************ */
 validate.registrationRules = () => {
@@ -43,6 +62,23 @@ validate.registrationRules = () => {
             .withMessage("password does not meet requirements.") // on error, this message will be returned
     ]
 }   
+
+validate.checkLoginData = async (req, res, next) => {
+    const { account_email } = req.body;
+    let errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        let nav = await utilities.getNav()
+        res.render("account/register", {
+            errors: errors.array(),
+            title: "login",
+            nav,
+            account_email
+        
+        })
+        return;
+    }
+    next();
+}
 
 /* *************************************
 * Check data and return errors or continue to registration

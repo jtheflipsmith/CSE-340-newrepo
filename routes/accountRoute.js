@@ -47,9 +47,11 @@ router.post(
     utilities.handleErrors(accController.buildManagement)
 )
 
+// Route to process account updates (edit form submission)
 router.post(
-    "/info:account_id",
-    utilities.handleErrors(accController.buildInfo)
+  "/update",
+  utilities.checkLogin,
+  utilities.handleErrors(accController.updateAccountInfo)
 )
 
 module.exports = router;

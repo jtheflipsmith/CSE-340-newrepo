@@ -24,6 +24,12 @@ const cookieParser = require("cookie-parser")
  * Middleware
  *************************/
 
+// cookie Parser statement
+app.use(cookieParser())
+
+// JWT authentication
+app.use(utilities.checkJWTToken)
+
 app.use(session({
   store: new (require('connect-pg-simple')(session))({ 
     createTableIfMissing: true, // Create the session table if it doesn't exist
@@ -44,11 +50,6 @@ app.use(function (req, res, next) { // custom middleware to setup flash message 
   res.locals.messages = require('express-messages')(req, res) // make flash messages available in response locals
   next() // move to next piece of middleware
 })
-// cookie Parser statement
-app.use(cookieParser())
-
-// JWT authentication
-app.use(utilities.checkJWTToken)
 
 // check authentication level
 app.use(utilities.authLevel)

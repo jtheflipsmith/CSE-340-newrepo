@@ -15,7 +15,7 @@ async function registerAccount(account_firstName, account_lastName, account_emai
 
 async function editAccountInfo(account_firstname, account_lastname, account_email){
   try {
-    const sql = "UPDATE publix.account SET account_firstname = $1, account_lastname = $2, account_email = $3 WHERE account_id = $4"
+    const sql = "UPDATE public.account SET account_firstname = $1, account_lastname = $2, account_email = $3 WHERE account_id = $4 RETURNING *"
     return await pool.query(sql, [account_firstname, account_lastname, account_email])
   } catch(error) {
     return error.message
@@ -51,7 +51,7 @@ async function getAccountByEmail (account_email) {
 /* *****************************
 * access account data
 * ***************************** */
-async function getAccountById (account_email) {
+async function getAccountById (account_id) {
   try {
     const result = await pool.query(
       'SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_id = $1',

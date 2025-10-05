@@ -45,15 +45,23 @@ async function buildManagement(req, res) {
     })
 }
 
-
+// async function buildInfo(req, res) {
+//     let nav = await utilities.getNav() // get the nav HTML snippet
+//     res.render("account/info", {
+//         title: "Edit Account",
+//         nav,
+//         errors: null
+//     })
+// }
 /* ************************************
 * Account Info View
 ************************************** */
 async function buildInfo (req, res, next) {
     try {
-        const account_id = parseInt(req.params.account_id)
           let nav = await utilities.getNav()
+          const account_id = res.locals.user.account_id
           const itemData = await accountModel.getAccountById(account_id)
+
           res.render("account/info", {
             title: "Edit Account Info",
             nav,
@@ -64,10 +72,46 @@ async function buildInfo (req, res, next) {
   
           })
         } catch (error) {
-        console.error("Error building idit view:", error.message);
+        console.error("Error building edit view:", error.message);
         next(error);
     }
 };
+
+/* ************************************
+* Process account info update
+************************************** */
+async function updateAccountInfo(req, res, next) {
+  try {
+    const nav = await utilities.getNav()
+    const account_id = res.locals.user.account_id
+    const { account_firstname, account_lastname, account_email } = req.body
+
+    const updatedAccount = await accountModel.editAccountInfo(
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email
+    )
+
+    if (!updatedAccount) {
+      req.flash("notice", "Update failed. Please try again.")
+      return res.status(400).render("account/info", {
+        title: "Edit Account Info",
+        nav,
+        errors: null,
+        account_firstname,
+        account_lastname,
+        account_email,
+      })
+    }
+
+    req.flash("notice", "Account information updated successfully!")
+    return res.redirect("/account/management")
+  } catch (error) {
+    console.error("Error updating account:", error.message)
+    next(error)
+  }
+}
 
 /* *************************************
 * Process registration
@@ -211,5 +255,6 @@ module.exports = {
     accountLogin, 
     buildManagement, 
     accountLogout,
-    buildInfo
+    buildInfo,
+    updateAccountInfo
  };

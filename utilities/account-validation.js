@@ -68,7 +68,7 @@ validate.checkLoginData = async (req, res, next) => {
     let errors = validationResult(req);
     if(!errors.isEmpty()) {
         let nav = await utilities.getNav()
-        res.render("account/register", {
+        res.render("account/login", {
             errors: errors.array(),
             title: "login",
             nav,
@@ -101,6 +101,26 @@ validate.checkRegData = async (req, res, next) => {
     next();
 }
 
+validate.checkAuthentication = async(req, res, next) => {
+    const { account_type } = req.body
+    if(account_type == "Employee" && "Admin") {
+        let nav = await utilities.getNav()
+        res.render("account/managment", {
+            errors,
+            title: "Welcome" + {account_firstname},
+            nav,
+            account_type,
+            account_firstname
+        }) 
+        return next()
+    } else {
+        res.redirect('/login')
+    }
+}
+
+validate.isNotAuthenticated = async(req, res, next) => {
+    constb
+}
 
 
 module.exports = validate;

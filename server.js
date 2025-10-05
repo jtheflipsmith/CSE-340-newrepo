@@ -19,6 +19,7 @@ const accountRoute = require("./routes/accountRoute")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
 
+
 /* ***********************
  * Middleware
  *************************/
@@ -45,8 +46,13 @@ app.use(function (req, res, next) { // custom middleware to setup flash message 
 })
 // cookie Parser statement
 app.use(cookieParser())
+
 // JWT authentication
 app.use(utilities.checkJWTToken)
+
+// check authentication level
+app.use(utilities.authLevel)
+
 
 /* ***********************
  * View Engine and Templates

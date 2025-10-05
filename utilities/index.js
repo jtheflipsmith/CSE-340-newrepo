@@ -135,15 +135,31 @@ Util.checkJWTToken = (req, res, next) => {
    process.env.ACCESS_TOKEN_SECRET,
    function (err, accountData) {
     if (err) {
-     req.flash("Please log in")
+     req.flash("notice", "Please log in")
      res.clearCookie("jwt")
+     // ensure template has a defined loginAccess value
+     res.locals.loggedIn = 0
+     res.locals.loginAccess = false
+     // ensure templates can safely reference user
+     res.locals.accountData = null
+     res.locals.user = null
      return res.redirect("/account/login")
     }
+    // expose account data under both names for template compatibility
     res.locals.accountData = accountData
-    res.locals.loggedin = 1
+    res.locals.user = accountData
+    res.locals.loggedIn = 1
+    // make templates aware of login status under the expected name
+    res.locals.loginAccess = true
     next()
    })
  } else {
+  // when no JWT cookie is present, ensure templates see a falsy login state
+  res.locals.loggedIn = 0
+  res.locals.loginAccess = false
+  // ensure templates can safely reference user
+  res.locals.accountData = null
+  res.locals.user = null
   next()
  }
 }
@@ -152,12 +168,64 @@ Util.checkJWTToken = (req, res, next) => {
  *  Check Login
  * ************************************ */
  Util.checkLogin = (req, res, next) => {
-  if (res.locals.loggedin) {
+  if (res.locals.loggedIn) {
     next()
   } else {
     req.flash("notice", "Please log in.")
     return res.redirect("/account/login")
   }
  }
+
+
+ // Validating and using cookie
+ Util.loginAuth = (req, res, next) => {
+  // Reading cookie
+  const token = req.cookies && req.cookies.jwt
+  // if no token mark as not logged in and continue
+  if (!token) {
+    res.locals.loggedIn = 0;
+    res.locals.user = null;
+    return next()
+  }
+// If there is a token verify it.
+  try {
+    // verifies the token signature and decodes it into "payload"
+    const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    // If password property exists delete for safety
+    if (payload.account_password) delete payload.account_password
+    // expose log in status and info to views
+    res.locals.loggedIn = 1;
+    res.locals.user = payload
+    return next()
+  } catch (err) {
+    // clear cookie and mark not logged in if token invalid
+    res.clearCookie('jwt')
+    res.locals.loggedIn = false
+    res.locals.user = null
+    return next()
+  }
+ }
+
+Util.authLevel = (req, res, next) => {
+  // Read cookie
+  const token = req.cookies && req.cookies.jwt
+  try {
+    const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    if (payload.account_type == "Employee" || payload.account_type == "admin") {
+      res.locals.management = 1
+      return next()
+    } else {
+      res.locals.management = 0
+      return next()
+    }
+  } catch (err) {
+    // clear cookie and mark not logged in if token invalid
+    res.clearCookie('jwt')
+    res.locals.loggedIn = false
+    res.locals.user = null
+    return next()
+  }
+}
+
 
 module.exports = Util

@@ -5,9 +5,9 @@
 
 <%- messages() %>
 
-<form action="/inv/update" method="POST">
+<form id="updateForm" action="/inv/update" method="POST">
     <label for="classificationList">Classification</label>
-    <%- classificationList %>
+    <%- classificationSelect %>
 
     <label for="inv_make">Make</label>
     <input type="text" minlength="3" name="inv_make" id="inv_make" placeholder="Min of 3 characters" required value="<%= locals.inv_make %>">
@@ -36,8 +36,8 @@
     <label for="inv_color">Color</label>
     <input type="text" name="inv_color" id="inv_color" placeholder="Vehicle color" required value="<% locals.inv_color %>">
 
-    <button type="submit">Update Vehicle</button>
+    <button type="submit" disabled>Update Vehicle</button>
     <input type="hidden" name="inv_id"
-    <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
-    <% } %>>
+    <% if(locals.inv_id) { %> value="<%= locals.inv_id %>" <% } %>>
 </form>
+<script src="../js/inv-update"></script>

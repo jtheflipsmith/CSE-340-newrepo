@@ -290,6 +290,18 @@ form a {
   background: var(--uranian-blue);
 }
 
+#account-management a{
+  display: flex;
+  background: var(--argentinian-blue);
+  margin: 10px;
+  justify-content: center;
+  padding: 10px;
+}
+
+#account-management a:hover {
+  background: var(--argentinian-blue-faded)
+}
+
 /* Desktop View */
 
 @media only screen and (min-width: 38rem) {
@@ -316,6 +328,23 @@ form a {
   #detailInfo {
     max-width: 300px;
   }
+}
+
+/* Make inline form buttons look like links for header/logout */
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link-button:focus {
+  outline: 2px solid var(--argentinian-blue);
+  outline-offset: 2px;
 }
 
 

@@ -35,14 +35,39 @@ async function buildRegistration(req, res, next) {
 /* *************************************
 * Deliver the confirmation login view
 * ************************************ */
-async function buildManagement(req, res, next) {
+async function buildManagement(req, res) {
     let nav = await utilities.getNav() // get the nav HTML snippet
-    res.render("account/default", {
-        title: "You're Logged In!",
+    res.render("account/management", {
+        title: "Account Management",
         nav,
+        loginAccess: true,
         errors: null
     })
 }
+
+
+/* ************************************
+* Account Info View
+************************************** */
+async function buildInfo (req, res, next) {
+    try {
+        const account_id = parseInt(req.params.account_id)
+          let nav = await utilities.getNav()
+          const itemData = await accountModel.getAccountById(account_id)
+          res.render("account/info", {
+            title: "Edit Account Info",
+            nav,
+            errors: null,
+            account_firstname: itemData.account_firstname,
+            account_lastname: itemData.account_lastname,
+            account_email: itemData.account_email
+  
+          })
+        } catch (error) {
+        console.error("Error building idit view:", error.message);
+        next(error);
+    }
+};
 
 /* *************************************
 * Process registration
@@ -100,12 +125,16 @@ async function registerAccount(req, res) {
 * Process login request
 * **************************************** */
 async function accountLogin(req, res) {
+    // Grab sites navigation menu
     let nav = await utilities.getNav()
+    // Pull email and password from the form to use more easily
     const { account_email, account_password } = req.body
+    // Checks if email is in database
     const accountData = await accountModel.getAccountByEmail(account_email)
+    // If account doesn't exist, show error then rerout to login page
     if (!accountData) {
         req.flash("notice", "Please check your credentials and try again")
-        req.status(400).render("account/login", {
+        res.status(400).render("account/login", {
             title: "Login",
             nav,
             errors: null,
@@ -114,18 +143,25 @@ async function accountLogin(req, res) {
         return
     }
     try {
+        // Check if plain password matches its hashed variant 
         if (await bcrypt.compare(account_password, accountData.account_password)) {
+            // if password is correct it deletes password for security
             delete accountData.account_password
+            // Creates webtoken to prove user is logged in, it expiresIn: 3600 seconds or 1 hour
             const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600})
             
-            // Set the JWT cookie
+            // Cookie is created to keep the user logged in
             if(process.env.NODE_ENV === 'development') {
+                // httpOnly: true = Javascript on brouser can't read
                 res.cookie("jwt", accessToken, {httpOnly: true, maxAge: 3600 * 1000})
             } else {
+                //cookie is only sent over HTTPS
                 res.cookie("jwt", accessToken, {httpOnly: true, secure: true, maxAge: 3600 * 1000})
             }
-            return res.redirect("/account/")
+            // User is rerouted to their account dashbourd
+            return res.redirect("/")
         }
+        // If password is wrong, then reroute to login page with error message.
         else {
             req.flash("message notice", "Please check your credentials and try again")
             res.status(400).render("account/login", {
@@ -140,5 +176,40 @@ async function accountLogin(req, res) {
     }
 }
 
+/* ********************************
+* Logout handler
+********************************* */
+async function accountLogout(req, res) {
+    // Clear the JWT cookie (used for auth)
+    res.clearCookie("jwt", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== "development",
+        path: '/'
+    })
 
-module.exports = { buildLogin, buildRegistration, registerAccount, accountLogin, buildManagement };
+    // Destroy the server-side session (if any) and clear the session cookie
+    if (req.session) {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session during logout:', err)
+            }
+            // Clear the session cookie set by express-session (name set in server.js)
+            res.clearCookie('sessionId', { path: '/' })
+            return res.redirect('/')
+        })
+    } else {
+        // No session to destroy, just clear session cookie and redirect
+        res.clearCookie('sessionId', { path: '/' })
+        return res.redirect('/')
+    }
+}
+
+module.exports = { 
+    buildLogin, 
+    buildRegistration, 
+    registerAccount, 
+    accountLogin, 
+    buildManagement, 
+    accountLogout,
+    buildInfo
+ };

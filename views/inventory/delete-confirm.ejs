@@ -5,10 +5,7 @@
 
 <%- messages() %>
 
-<form action="/inv/update" method="POST">
-    <label for="classificationList">Classification</label>
-    <%- classificationList %>
-
+<form action="/inv/delete" method="POST">
     <label for="inv_make">Make</label>
     <input type="text" minlength="3" name="inv_make" id="inv_make" placeholder="Min of 3 characters" readonly value="<%= locals.inv_make %>">
 

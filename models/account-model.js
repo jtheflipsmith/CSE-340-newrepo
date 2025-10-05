@@ -7,11 +7,21 @@ const pool = require("../database/")
 async function registerAccount(account_firstName, account_lastName, account_email, account_password){
     try {
         const sql = "INSERT INTO account (account_firstname, account_lastname, account_email, account_password) VALUES ($1, $2, $3, $4) RETURNING *"
-        return await pool.query(sql, [account_firstName, account_lastName, account_email, account_password])
+        return await pool.query(sql, [account_firstname, account_lastname, account_email, account_password])
     } catch (error) {
         return error.message
     }
 }
+
+async function editAccountInfo(account_firstname, account_lastname, account_email){
+  try {
+    const sql = "UPDATE publix.account SET account_firstname = $1, account_lastname = $2, account_email = $3 WHERE account_id = $4"
+    return await pool.query(sql, [account_firstname, account_lastname, account_email])
+  } catch(error) {
+    return error.message
+  }
+}
+
 
 async function checkExistingEmail(account_email){
     try {
@@ -37,4 +47,26 @@ async function getAccountByEmail (account_email) {
   }
 }
 
-module.exports = {registerAccount, checkExistingEmail, getAccountByEmail};
+
+/* *****************************
+* access account data
+* ***************************** */
+async function getAccountById (account_email) {
+  try {
+    const result = await pool.query(
+      'SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_id = $1',
+      [account_id])
+    return result.rows[0]
+  } catch (error) {
+    return new Error("No matching email found")
+  }
+}
+
+
+module.exports = {
+  registerAccount, 
+  checkExistingEmail, 
+  getAccountByEmail,
+  editAccountInfo,
+  getAccountById
+};

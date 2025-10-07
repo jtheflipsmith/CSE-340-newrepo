@@ -118,9 +118,7 @@ validate.checkAuthentication = async(req, res, next) => {
     }
 }
 
-validate.isNotAuthenticated = async(req, res, next) => {
-    constb
-}
+
 
 
 module.exports = validate;

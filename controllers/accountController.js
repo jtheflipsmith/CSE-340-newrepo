@@ -37,8 +37,9 @@ async function buildRegistration(req, res, next) {
 * ************************************ */
 async function buildManagement(req, res) {
     let nav = await utilities.getNav() // get the nav HTML snippet
+    const accountData = res.locals.user
     res.render("account/management", {
-        title: "Account Management",
+        title: `Welcome ${accountData.account_firstname}`,
         nav,
         loginAccess: true,
         errors: null
@@ -69,6 +70,8 @@ async function buildInfo (req, res, next) {
             account_firstname: itemData.account_firstname,
             account_lastname: itemData.account_lastname,
             account_email: itemData.account_email
+                        ,
+                        account_id: itemData.account_id
   
           })
         } catch (error) {
@@ -81,19 +84,23 @@ async function buildInfo (req, res, next) {
 * Process account info update
 ************************************** */
 async function updateAccountInfo(req, res, next) {
-  try {
-    const nav = await utilities.getNav()
-    const account_id = res.locals.user.account_id
-    const { account_firstname, account_lastname, account_email } = req.body
-
+    let nav = await utilities.getNav()
+    const { 
+        
+        account_firstname, 
+        account_lastname, 
+        account_email,
+        account_id
+    } = req.body
     const updatedAccount = await accountModel.editAccountInfo(
-      account_id,
+      
       account_firstname,
       account_lastname,
-      account_email
+      account_email,
+      account_id
     )
 
-    if (!updatedAccount) {
+        if (!updatedAccount) {
       req.flash("notice", "Update failed. Please try again.")
       return res.status(400).render("account/info", {
         title: "Edit Account Info",
@@ -102,15 +109,51 @@ async function updateAccountInfo(req, res, next) {
         account_firstname,
         account_lastname,
         account_email,
+        account_id
       })
     }
 
     req.flash("notice", "Account information updated successfully!")
     return res.redirect("/account/management")
-  } catch (error) {
-    console.error("Error updating account:", error.message)
-    next(error)
-  }
+}
+
+async function updateAccountPassword(req, res) {
+    let nav = await utilities.getNav()
+    const{account_password} = req.body
+
+        // Hash the password before storing
+    let hashedPassword
+    try {
+        // regular password and cost (salt is generated automatically)
+        hashedPassword = await bcrypt.hash(account_password, 10)
+    } catch (error) {
+        req.flash("notice", "Sorry, there was an error processing the new password.")
+        res.status(500).render("account/infp", {
+            title: "info",
+            nav,
+            errors: null
+        })
+    }
+
+    const updatePasswordResult = await accountModel.updatePassword(account_id, hashedPassword)
+    if (updatePasswordResult) {
+    req.flash(
+        "notice",
+        `Congratulations, you\'ve updated your password.` 
+    )
+    res.status(201).render("account/management", {
+        title: "Account Management",
+        nav,
+    })
+    }
+    else {
+        req.flash("notice", "Sorry, the update failed.")
+        res.status(501).render("account/info", {
+            title: "Account Info",
+            nav,
+        })
+    }
+
 }
 
 /* *************************************
@@ -256,5 +299,6 @@ module.exports = {
     buildManagement, 
     accountLogout,
     buildInfo,
-    updateAccountInfo
+    updateAccountInfo,
+    updateAccountPassword
  };

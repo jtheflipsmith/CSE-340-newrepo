@@ -4,7 +4,7 @@ const pool = require("../database/")
 /* ***************************
 *  Register a new account
 * ************************** */
-async function registerAccount(account_firstName, account_lastName, account_email, account_password){
+async function registerAccount(account_firstname, account_lastname, account_email, account_password){
     try {
         const sql = "INSERT INTO account (account_firstname, account_lastname, account_email, account_password) VALUES ($1, $2, $3, $4) RETURNING *"
         return await pool.query(sql, [account_firstname, account_lastname, account_email, account_password])
@@ -13,14 +13,40 @@ async function registerAccount(account_firstName, account_lastName, account_emai
     }
 }
 
-async function editAccountInfo(account_firstname, account_lastname, account_email){
+async function editAccountInfo(
+  
+  account_firstname, 
+  account_lastname, 
+  account_email,
+  account_id
+){
   try {
     const sql = "UPDATE public.account SET account_firstname = $1, account_lastname = $2, account_email = $3 WHERE account_id = $4 RETURNING *"
-    return await pool.query(sql, [account_firstname, account_lastname, account_email])
+    const data = await pool.query(sql, [
+    
+      account_firstname,
+      account_lastname, 
+      account_email,
+      account_id
+    ])
+    return data.rows[0]
   } catch(error) {
     return error.message
   }
 }
+
+async function updatePassword(account_id, hashedPassword) {
+  try {
+    const sql = "UPDATE public.account SET account_passwordd = $1 WHERE account_id = $2 RETURNING *"
+    const data = await pool.query(sql, [
+      account_password, account_id
+    ])
+    return data.rows[0]
+  } catch(error) {
+    return error.message
+  }
+}
+
 
 
 async function checkExistingEmail(account_email){
@@ -63,10 +89,12 @@ async function getAccountById (account_id) {
 }
 
 
+
 module.exports = {
   registerAccount, 
   checkExistingEmail, 
   getAccountByEmail,
   editAccountInfo,
-  getAccountById
+  getAccountById,
+  updatePassword
 };

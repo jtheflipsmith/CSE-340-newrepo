@@ -37,12 +37,24 @@ async function editAccountInfo(
 
 async function updatePassword(account_id, hashedPassword) {
   try {
-    const sql = "UPDATE public.account SET account_passwordd = $1 WHERE account_id = $2 RETURNING *"
+    const sql = "UPDATE public.account SET account_password = $1 WHERE account_id = $2 RETURNING *"
     const data = await pool.query(sql, [
-      account_password, account_id
+      hashedPassword, account_id
     ])
     return data.rows[0]
   } catch(error) {
+    return error.message
+  }
+}
+
+async function updateAccountType(account_id, account_type) {
+  try{
+    const sql = "UPDATE public.account SET account_type = $1 WHERE account_id = $2 RETURNING *"
+    const data = await pool.query(sql, [
+      account_type, account_id
+    ])
+    return data.rows[0]
+  } catch(error){
     return error.message
   }
 }
@@ -96,5 +108,6 @@ module.exports = {
   getAccountByEmail,
   editAccountInfo,
   getAccountById,
-  updatePassword
+  updatePassword,
+  updateAccountType
 };

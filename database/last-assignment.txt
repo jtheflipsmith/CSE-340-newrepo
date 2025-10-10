@@ -1,0 +1,121 @@
+MODEL: models/account-model.js
+
+async function updateAccountType(account_id, account_type) {
+  try{
+    const sql = "UPDATE public.account SET account_type = $1 WHERE account_id = $2 RETURNING *"
+    const data = await pool.query(sql, [
+      account_type, account_id
+    ])
+    return data.rows[0]
+  } catch(error){
+    return error.message
+  }
+}
+_________________________________________________
+
+VIEW: views/account/admin.ejs
+
+
+<!--title data value-->
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else {
+        res.redirect('/')  
+    } %>
+
+<%- messages() %>
+
+<form id="adminForm" action="/account/admin" method="post">
+    <p>Please provide the access code.</p>
+    <label for="password">Password</label>
+    <!-- name should be 'password' to match the controller's expected field -->
+    <input type="password" name="password" id="password"  placeholder="****" required>
+
+    <!-- include account_id so the controller knows which account to update -->
+    <input type="hidden" name="account_id"
+    <% if (locals.user && locals.user.account_id) { %> value="<%= locals.user.account_id %>"
+    <% } %> >
+
+    <button type="submit">Submit</button>
+    <p>No account? <a href="/account/register">Sign-up</a></p>
+</form>
+
+_______________________________________________________________
+
+CONTROLLER: controllers/accountController.js
+
+/* ************************************
+* Build Admin view
+************************************ */
+async function buildAdmin(req, res, next) {
+    let nav = await utilities.getNav() // get the nav HTML snippet
+    res.render("account/admin", {
+        title: "Admin",
+        nav,
+    })
+}
+
+/* ***********************************
+* LAST ASSIGNMENT
+* Adding account change to a log in view
+* *********************************** */
+async function updateAccountType(req, res) {
+    let nav = await utilities.getNav() 
+
+    const { password, account_id } = req.body
+    console.log("User entered password", password)
+    console.log("Admin code from .env:", process.env.ADMIN_CODE)
+    // verify admin code matches
+    if (password == process.env.ADMIN_CODE) {
+        try {
+            const result = await accountModel.updateAccountType(account_id, "Admin")
+            if (result) {
+                req.flash("notice", "Account information updated successfully!")
+                return res.redirect("/account/management")
+            } else {
+                req.flash("notice", "Update failed. Please try again.")
+                return res.status(400).render("account/admin", {
+                    title: "Edit Account Info",
+                    nav,
+                    errors: null
+                })
+            }
+        } catch (error) {
+            console.error('Error updating account type:', error)
+            req.flash("notice", "An error occurred while updating account type.")
+            return res.status(500).render("account/admin", { title: "Admin Access", nav })
+        }
+    } else {
+        req.flash("notice", "Password not correct")
++       res.status(403).render("account/admin", { title: "Admin Access", nav });
+    }
+
+_________________________________________________
+
+ROUTES: routes/accountRoute.js
+
+router.get("/admin", utilities.handleErrors(accController.buildAdmin))
+
+router.post(
+  "/admin",
+  regValidate.checkAdmin,
+  utilities.handleErrors(accController.updateAccountType)
+)
+
+UTILITIES: utilities/account-validation.js
+
+validate.checkAdmin = async (req, res, next) => {
+    const { account_type } = req.body
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav() // get the nav HTML snippet
+        res.render("account/admin", {
+            errors,
+            title: "Admin",
+            nav,
+            account_type
+        })
+        return;
+    }
+    next();
+}

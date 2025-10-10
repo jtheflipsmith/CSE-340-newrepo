@@ -211,7 +211,10 @@ Util.authLevel = (req, res, next) => {
   const token = req.cookies && req.cookies.jwt
   try {
     const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-    if (payload.account_type == "Employee" || payload.account_type == "admin") {
+    if (payload.account_type == "Admin") {
+      res.locals.management = 1
+      return next()
+    } else if (payload.account_type == "Employee") {
       res.locals.management = 1
       return next()
     } else {

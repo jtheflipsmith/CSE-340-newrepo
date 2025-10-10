@@ -21,6 +21,8 @@ router.get("/management", utilities.handleErrors(accController.buildManagement))
 
 router.get("/info", utilities.handleErrors(accController.buildInfo))
 
+router.get("/admin", utilities.handleErrors(accController.buildAdmin))
+
 // Route to process registration data
 router.post(
     "/register",
@@ -47,11 +49,12 @@ router.post(
     utilities.handleErrors(accController.buildManagement)
 )
 
-// Route to process account updates (edit form submission)
+
+// Route to process account info updates (edit form submission)
 router.post(
   "/info",
-  regValidate.checkRegData,
   regValidate.registrationRules(),
+  regValidate.checkRegData,
   utilities.handleErrors(accController.updateAccountInfo)
 )
 
@@ -59,6 +62,12 @@ router.post(
   "/info",
   utilities.checkLogin,
   utilities.handleErrors(accController.updateAccountPassword)
+)
+
+router.post(
+  "/admin",
+  regValidate.checkAdmin,
+  utilities.handleErrors(accController.updateAccountType)
 )
 
 module.exports = router;

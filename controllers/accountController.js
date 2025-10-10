@@ -46,17 +46,17 @@ async function buildManagement(req, res) {
     })
 }
 
-// async function buildInfo(req, res) {
-//     let nav = await utilities.getNav() // get the nav HTML snippet
-//     res.render("account/info", {
-//         title: "Edit Account",
-//         nav,
-//         errors: null
-//     })
-// }
 /* ************************************
-* Account Info View
-************************************** */
+* Build Admin view
+************************************ */
+async function buildAdmin(req, res, next) {
+    let nav = await utilities.getNav() // get the nav HTML snippet
+    res.render("account/admin", {
+        title: "Admin",
+        nav,
+    })
+}
+
 async function buildInfo (req, res, next) {
     try {
           let nav = await utilities.getNav()
@@ -119,7 +119,7 @@ async function updateAccountInfo(req, res, next) {
 
 async function updateAccountPassword(req, res) {
     let nav = await utilities.getNav()
-    const{account_password} = req.body
+    const { account_password, account_id } = req.body
 
         // Hash the password before storing
     let hashedPassword
@@ -155,6 +155,8 @@ async function updateAccountPassword(req, res) {
     }
 
 }
+
+
 
 /* *************************************
 * Process registration
@@ -291,6 +293,45 @@ async function accountLogout(req, res) {
     }
 }
 
+
+/* ***********************************
+* LAST ASSIGNMENT
+* Adding account change to a log in view
+* *********************************** */
+async function updateAccountType(req, res) {
+    let nav = await utilities.getNav() 
+
+    const { password, account_id } = req.body
+    console.log("User entered password", password)
+    console.log("Admin code from .env:", process.env.ADMIN_CODE)
+    // verify admin code matches
+    if (password == process.env.ADMIN_CODE) {
+        try {
+            const result = await accountModel.updateAccountType(account_id, "Admin")
+            if (result) {
+                req.flash("notice", "Account information updated successfully!")
+                return res.redirect("/account/management")
+            } else {
+                req.flash("notice", "Update failed. Please try again.")
+                return res.status(400).render("account/admin", {
+                    title: "Edit Account Info",
+                    nav,
+                    errors: null
+                })
+            }
+        } catch (error) {
+            console.error('Error updating account type:', error)
+            req.flash("notice", "An error occurred while updating account type.")
+            return res.status(500).render("account/admin", { title: "Admin Access", nav })
+        }
+    } else {
+        req.flash("notice", "Password not correct")
++       res.status(403).render("account/admin", { title: "Admin Access", nav });
+    }
+
+
+}
+
 module.exports = { 
     buildLogin, 
     buildRegistration, 
@@ -300,5 +341,7 @@ module.exports = {
     accountLogout,
     buildInfo,
     updateAccountInfo,
-    updateAccountPassword
+    updateAccountPassword,
+    buildAdmin,
+    updateAccountType
  };

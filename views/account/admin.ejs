@@ -1,0 +1,23 @@
+<!--title data value-->
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else {
+        res.redirect('/')  
+    } %>
+
+<%- messages() %>
+
+<form id="adminForm" action="/account/admin" method="post">
+    <p>Please provide the access code.</p>
+    <label for="password">Password</label>
+    <!-- name should be 'password' to match the controller's expected field -->
+    <input type="password" name="password" id="password"  placeholder="****" required>
+
+    <!-- include account_id so the controller knows which account to update -->
+    <input type="hidden" name="account_id"
+    <% if (locals.user && locals.user.account_id) { %> value="<%= locals.user.account_id %>"
+    <% } %> >
+
+    <button type="submit">Submit</button>
+    <p>No account? <a href="/account/register">Sign-up</a></p>
+</form>

@@ -118,7 +118,21 @@ validate.checkAuthentication = async(req, res, next) => {
     }
 }
 
-
+validate.checkAdmin = async (req, res, next) => {
+    const { account_type } = req.body
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav() // get the nav HTML snippet
+        res.render("account/admin", {
+            errors,
+            title: "Admin",
+            nav,
+            account_type
+        })
+        return;
+    }
+    next();
+}
 
 
 module.exports = validate;
